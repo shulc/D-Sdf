@@ -1,0 +1,6 @@
+[submodule "extern/sdf"]
+	path = extern/sdf
+	url = https://github.com/sxyu/sdf.git
+[submodule "extern/eigen"]
+	path = extern/eigen
+	url = https://gitlab.com/libeigen/eigen.git

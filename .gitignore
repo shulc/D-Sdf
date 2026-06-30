@@ -1,0 +1,13 @@
+build/
+.dub/
+*.o
+*.a
+*.so
+*.dylib
+docs/
+docs.json
+__dummy.html
+d-sdf
+*-test-library
+*-test-unittest
+/sdf_cube
