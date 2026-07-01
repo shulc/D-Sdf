@@ -48,4 +48,10 @@ else()
     target_compile_options(sdf_c PRIVATE /W3 /wd4996)
     # _USE_MATH_DEFINES exposes M_PI etc. under MSVC (hidden behind it by default).
     target_compile_definitions(sdf_c PRIVATE _USE_MATH_DEFINES _CRT_SECURE_NO_WARNINGS)
+    # MSVC doesn't pull in <chrono> transitively the way GCC/Clang do;
+    # force-include our shim so util.cpp's std::chrono::high_resolution_clock
+    # is visible without touching the upstream sxyu/sdf submodule.
+    target_compile_options(sdf_c PRIVATE
+        "/FI${CMAKE_CURRENT_SOURCE_DIR}/csrc/msvc_compat.h"
+    )
 endif()
