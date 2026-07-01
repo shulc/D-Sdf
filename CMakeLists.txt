@@ -30,12 +30,22 @@ target_include_directories(sdf_c
 )
 
 # sxyu/sdf uses std::thread; link pthreads so the library is self-contained.
+# On MSVC/Windows native threads are automatic; Threads::Threads is a no-op.
 find_package(Threads REQUIRED)
 target_link_libraries(sdf_c PRIVATE Threads::Threads)
 
 # Suppress noise from upstream code, keep our shim clean.
-target_compile_options(sdf_c PRIVATE
-    -O2
-    -Wno-deprecated-declarations
-    -Wno-deprecated
-)
+# GCC/Clang flags only — MSVC (cl) does not understand -W* / -O2 and would fail.
+if(NOT MSVC)
+    target_compile_options(sdf_c PRIVATE
+        -O2
+        -Wno-deprecated-declarations
+        -Wno-deprecated
+    )
+else()
+    # /W3 is the MSVC default; silence the one C4996 deprecation family that
+    # Eigen triggers and that sdf.cpp may surface under cl.
+    target_compile_options(sdf_c PRIVATE /W3 /wd4996)
+    # _USE_MATH_DEFINES exposes M_PI etc. under MSVC (hidden behind it by default).
+    target_compile_definitions(sdf_c PRIVATE _USE_MATH_DEFINES _CRT_SECURE_NO_WARNINGS)
+endif()

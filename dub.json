@@ -12,12 +12,17 @@
         "cmake -S \"$PACKAGE_DIR\" -B \"$PACKAGE_DIR/build\" -DCMAKE_BUILD_TYPE=Release",
         "cmake --build \"$PACKAGE_DIR/build\" -j --target sdf_c"
     ],
+    "lflags-posix": ["-L$PACKAGE_DIR/build"],
+    "libs-linux": ["sdf_c", "stdc++", "pthread", "m"],
+    "libs-osx":   ["sdf_c", "c++", "m"],
 
-    "lflags-posix": [
-        "-L$PACKAGE_DIR/build"
+    "preBuildCommands-windows": [
+        "git -C \"$PACKAGE_DIR\" submodule update --init --recursive",
+        "cmake -S \"$PACKAGE_DIR\" -B \"$PACKAGE_DIR/build\"",
+        "cmake --build \"$PACKAGE_DIR/build\" --config Release --target sdf_c"
     ],
-
-    "libs-posix": ["sdf_c", "stdc++", "pthread", "m"],
+    "lflags-windows": ["$PACKAGE_DIR/build/Release/sdf_c.lib"],
+    "dflags-windows": ["-mscrtlib=msvcrt"],
 
     "configurations": [
         {
